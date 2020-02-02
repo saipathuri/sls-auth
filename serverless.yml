@@ -3,6 +3,7 @@ service: serverless-auth
 plugins:
   - serverless-bundle
   - serverless-offline
+  - serverless-dotenv-plugin
 
 custom:
   tableName: "users-table-${self:provider.stage}"
