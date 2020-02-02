@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "aws-sdk": "^2.610.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "node-uuid": "^1.4.8",
+    "serverless-bundle": "^1.2.5",
+    "serverless-http": "^2.3.1"
+  },
+  "devDependencies": {
+    "morgan": "^1.9.1",
+    "serverless-offline": "^5.12.1"
+  }
+}

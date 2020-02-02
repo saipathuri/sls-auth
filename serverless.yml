@@ -1,0 +1,70 @@
+service: serverless-auth
+
+plugins:
+  - serverless-bundle
+  - serverless-offline
+
+custom:
+  tableName: "users-table-${self:provider.stage}"
+  indexName: "UserDetail"
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource:
+        - { "Fn::GetAtt": ["UsersDynamoDBTable", "Arn"] }
+  environment:
+    USERS_TABLE: ${self:custom.tableName}
+    INDEX_NAME: ${self:custom.indexName}
+    NODE_ENV: ${self:provider.stage}
+
+stage: dev
+region: us-east-2
+
+functions:
+  auth:
+    handler: handler.server
+    events:
+      - http:
+          path: /login
+          method: post
+      - http:
+          path: /register
+          method: post
+
+resources:
+  Resources:
+    UsersDynamoDBTable:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+        TableName: ${self:custom.tableName}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: username
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        GlobalSecondaryIndexes:
+          - IndexName: ${self:custom.indexName}
+            KeySchema:
+              - AttributeName: username
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
