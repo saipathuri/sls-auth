@@ -15,6 +15,7 @@
     "serverless-offline": "^5.12.1"
   },
   "scripts": {
-    "deploy": "sls deploy"
+    "deploy": "sls deploy",
+    "run": "sls offline start"
   }
 }
