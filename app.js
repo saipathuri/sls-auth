@@ -2,15 +2,14 @@ import express, { json } from "express";
 import cors from "cors";
 import uuid from "node-uuid";
 import morgan from "morgan";
+import { USERS_TABLE, INDEX_NAME, isDevEnvironment } from "./config";
 const AWS = require("aws-sdk");
 
-const USERS_TABLE = process.env.USERS_TABLE;
-const INDEX_NAME = process.env.INDEX_NAME;
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 const server = express();
 
-if (process.env.NODE_ENV === "development") {
+if (isDevEnvironment()) {
   server.use(morgan("combined"));
 }
 server.use(cors());
