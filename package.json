@@ -11,6 +11,10 @@
   },
   "devDependencies": {
     "morgan": "^1.9.1",
+    "serverless": "^1.62.0",
     "serverless-offline": "^5.12.1"
+  },
+  "scripts": {
+    "deploy": "sls deploy"
   }
 }
