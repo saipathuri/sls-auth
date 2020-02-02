@@ -16,6 +16,6 @@
   },
   "scripts": {
     "deploy": "sls deploy",
-    "run": "sls offline start"
+    "start": "sls offline start"
   }
 }
