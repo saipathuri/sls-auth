@@ -1,0 +1,26 @@
+# Using the node alpine image to build the React app
+image: node:alpine
+
+variables:
+  AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+  AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+
+# Cache node modules - speeds up future builds
+cache:
+  paths:
+    - node_modules
+
+#This declares the pipeline stages
+stages:
+  - test
+  - deploy
+
+test:
+  stage: test
+  script:
+    - echo "Running test suite......"
+
+deploy:
+  stage: deploy
+  script:
+    - yarn run deploy
