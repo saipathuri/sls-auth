@@ -2,6 +2,7 @@ import express, { json } from "express";
 import cors from "cors";
 import uuid from "node-uuid";
 import morgan from "morgan";
+import bcrypt from "bcryptjs";
 import { USERS_TABLE, INDEX_NAME, isDevEnvironment } from "./config";
 const AWS = require("aws-sdk");
 
@@ -37,18 +38,16 @@ server.post("/login", async (req, res, next) => {
 
   try {
     result = await findUser(username, next);
+    if (result && result.Items && result.Items[0]) {
+      const item = result.Items[0];
+      if (await bcrypt.compare(password, item.password)) {
+        return res
+          .status(200)
+          .json({ username: item.username, roles: item.roles });
+      }
+    }
   } catch (e) {
     return next(e);
-  }
-
-  if (result && result.Items && result.Items[0]) {
-    // const {password} = result.Item;
-    const item = result.Items[0];
-    if (item.password === password) {
-      delete item.password;
-      delete item.id;
-      return res.status(200).json(item);
-    }
   }
   return res.sendStatus(401);
 });
@@ -77,12 +76,13 @@ server.post("/register", async (req, res, next) => {
 
   //create user
   try {
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
     const params = {
       TableName: USERS_TABLE,
       Item: {
         id: uuid.v4(),
         username: username,
-        password: password,
+        password: hashedPassword,
         roles: []
       }
     };

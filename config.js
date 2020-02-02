@@ -1,5 +1,9 @@
-const USERS_TABLE = process.env.USERS_TABLE;
-const INDEX_NAME = process.env.INDEX_NAME;
+const {
+  USERS_TABLE,
+  INDEX_NAME
+  // ACCESS_TOKEN_SECRET,
+  // REFRESH_TOKEN_SECRET
+} = process.env;
 
 const isDevEnvironment = () => {
   return process.env.NODE_ENV === "development";

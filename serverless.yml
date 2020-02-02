@@ -11,6 +11,8 @@ custom:
 
 provider:
   name: aws
+  stage: dev
+  region: us-east-2
   runtime: nodejs12.x
   iamRoleStatements:
     - Effect: Allow
@@ -27,9 +29,8 @@ provider:
     USERS_TABLE: ${self:custom.tableName}
     INDEX_NAME: ${self:custom.indexName}
     NODE_ENV: ${self:provider.stage}
-
-stage: dev
-region: us-east-2
+    ACCESS_TOKEN_SECRET: ${env:ACCESS_TOKEN_SECRET}
+    REFRESH_TOKEN_SECRET: ${env:REFRESH_TOKEN_SECRET}
 
 functions:
   auth:
