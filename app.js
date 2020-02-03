@@ -12,6 +12,6 @@ if (isDevEnvironment()) {
 
 app.use(cors());
 app.use(json());
-app.use("/", authRouter);
+app.use("/auth", authRouter);
 
 export default app;
