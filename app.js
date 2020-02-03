@@ -1,26 +1,23 @@
-import express, { json } from "express";
-import cors from "cors";
-import uuid from "node-uuid";
-import morgan from "morgan";
-import bcrypt from "bcryptjs";
-import { USERS_TABLE, INDEX_NAME, isDevEnvironment } from "./config";
 const AWS = require("aws-sdk");
+import bcrypt from "bcryptjs";
+import cors from "cors";
+import express, { json } from "express";
+import morgan from "morgan";
+import uuid from "node-uuid";
+import { USERS_TABLE, INDEX_NAME, isDevEnvironment } from "./config/config";
+
+const app = express();
+
+if (isDevEnvironment()) {
+  app.use(morgan("combined"));
+}
+
+app.use(cors());
+app.use(json());
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
-const server = express();
-
-if (isDevEnvironment()) {
-  server.use(morgan("combined"));
-}
-server.use(cors());
-server.use(json());
-
-server.get("/", (req, res) => {
-  res.json({ message: "Express API Powered by AWS Lambda!" });
-});
-
-const findUser = async (username, next) => {
+const findUser = async username => {
   const params = {
     TableName: USERS_TABLE,
     IndexName: INDEX_NAME,
@@ -32,12 +29,12 @@ const findUser = async (username, next) => {
   return await dynamoDb.query(params).promise();
 };
 
-server.post("/login", async (req, res, next) => {
+app.post("/login", async (req, res, next) => {
   const { username, password } = req.body;
   let result;
 
   try {
-    result = await findUser(username, next);
+    result = await findUser(username);
     if (result && result.Items && result.Items[0]) {
       const item = result.Items[0];
       if (await bcrypt.compare(password, item.password)) {
@@ -52,7 +49,7 @@ server.post("/login", async (req, res, next) => {
   return res.sendStatus(401);
 });
 
-server.post("/register", async (req, res, next) => {
+app.post("/register", async (req, res, next) => {
   const { username, password, passwordRepeat } = req.body;
 
   if (password !== passwordRepeat) {
@@ -94,4 +91,4 @@ server.post("/register", async (req, res, next) => {
   }
 });
 
-export default server;
+export default app;

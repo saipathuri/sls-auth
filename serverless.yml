@@ -4,10 +4,8 @@ plugins:
   - serverless-bundle
   - serverless-offline
   - serverless-dotenv-plugin
-
-custom:
-  tableName: "users-table-${self:provider.stage}"
-  indexName: "UserDetail"
+  - serverless-aws-documentation
+  - serverless-domain-manager
 
 provider:
   name: aws
@@ -70,3 +68,16 @@ resources:
             ProvisionedThroughput:
               ReadCapacityUnits: 1
               WriteCapacityUnits: 1
+
+custom:
+  tableName: "users-table-${self:provider.stage}"
+  indexName: "UserDetail"
+  customDomain:
+    domainName: auth.saipathuri.me
+    basePath: api
+    certificateName: "auth.saipathuri.me"
+    createRoute53Record: true
+    endpointType: "regional"
+    securityPolicy: tls_1_2
+  documentation:
+    api: ${file(docs/swagger.yml)}
