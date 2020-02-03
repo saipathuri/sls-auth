@@ -18,6 +18,8 @@
   },
   "scripts": {
     "deploy": "sls deploy",
-    "start": "sls offline start"
+    "start": "sls offline start",
+    "create_domain": "sls create_domain",
+    "remove_domain": "sls remove_domain"
   }
 }
