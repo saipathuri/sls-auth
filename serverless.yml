@@ -23,6 +23,22 @@ provider:
         - dynamodb:DeleteItem
       Resource:
         - { "Fn::GetAtt": ["UsersDynamoDBTable", "Arn"] }
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+      Resource:
+        - {
+            "Fn::Join":
+              [
+                "/",
+                [
+                  { "Fn::GetAtt": ["UsersDynamoDBTable", "Arn"] },
+                  "index",
+                  "UserDetail",
+                ],
+              ],
+          }
   environment:
     USERS_TABLE: ${self:custom.tableName}
     INDEX_NAME: ${self:custom.indexName}
