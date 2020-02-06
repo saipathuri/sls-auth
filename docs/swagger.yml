@@ -72,3 +72,25 @@ paths:
           description: "User with username already exists."
         403:
           description: "Passwords don't match."
+  /verify:
+    post:
+      summary: "Verify - verify a JWT"
+      consumes:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "token"
+          description: "JWT to be verified"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              token:
+                type: "string"
+      responses:
+        200:
+          description: "Token is verified."
+        401:
+          description: "Token not in request body."
+        403:
+          description: "Token not verified."
