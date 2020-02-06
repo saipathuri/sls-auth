@@ -26,7 +26,7 @@ const findUserByUsername = async username => {
 };
 
 function generateAccessToken(user) {
-  return jsonwebtoken.sign(user, ACCESS_TOKEN_SECRET, { expiresIn: "1m" });
+  return jsonwebtoken.sign(user, ACCESS_TOKEN_SECRET, { expiresIn: "60m" });
 }
 
 function generateRefreshToken(user) {
