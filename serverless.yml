@@ -9,7 +9,6 @@ plugins:
 
 provider:
   name: aws
-  stage: dev
   region: us-east-2
   runtime: nodejs12.x
   iamRoleStatements:
