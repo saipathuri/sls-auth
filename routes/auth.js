@@ -1,8 +1,14 @@
 const AWS = require("aws-sdk");
 import bcrypt from "bcryptjs";
-import { USERS_TABLE, INDEX_NAME } from "../config/config";
+import {
+  USERS_TABLE,
+  INDEX_NAME,
+  ACCESS_TOKEN_SECRET,
+  REFRESH_TOKEN_SECRET
+} from "../config/config";
 import uuid from "node-uuid";
 import express from "express";
+import jsonwebtoken from "jsonwebtoken";
 
 const authRouter = express.Router();
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
@@ -19,6 +25,14 @@ const findUser = async username => {
   return await dynamoDb.query(params).promise();
 };
 
+function generateAccessToken(user) {
+  return jsonwebtoken.sign(user, ACCESS_TOKEN_SECRET, { expiresIn: "60m" });
+}
+
+function generateRefreshToken(user) {
+  return jsonwebtoken.sign(user, REFRESH_TOKEN_SECRET);
+}
+
 authRouter.post("/login", async (req, res, next) => {
   const { username, password } = req.body;
   let result;
@@ -28,9 +42,12 @@ authRouter.post("/login", async (req, res, next) => {
     if (result && result.Items && result.Items[0]) {
       const item = result.Items[0];
       if (await bcrypt.compare(password, item.password)) {
+        const user = { username: item.username, roles: item.roles };
+        const accessToken = generateAccessToken(user);
+        const refreshToken = generateRefreshToken(user);
         return res
           .status(200)
-          .json({ username: item.username, roles: item.roles });
+          .json({ accessToken: accessToken, refreshToken: refreshToken });
       }
     }
   } catch (e) {
