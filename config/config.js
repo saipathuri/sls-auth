@@ -1,6 +1,6 @@
 const {
   USERS_TABLE,
-  INDEX_NAME,
+  USERS_INDEX_NAME,
   ACCESS_TOKEN_SECRET,
   REFRESH_TOKEN_SECRET
 } = process.env;
@@ -11,7 +11,7 @@ const isDevEnvironment = () => {
 
 export {
   USERS_TABLE,
-  INDEX_NAME,
+  USERS_INDEX_NAME,
   ACCESS_TOKEN_SECRET,
   REFRESH_TOKEN_SECRET,
   isDevEnvironment

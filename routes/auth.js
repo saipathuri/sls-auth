@@ -2,7 +2,7 @@ const AWS = require("aws-sdk");
 import bcrypt from "bcryptjs";
 import {
   USERS_TABLE,
-  INDEX_NAME,
+  USERS_INDEX_NAME,
   ACCESS_TOKEN_SECRET,
   REFRESH_TOKEN_SECRET
 } from "../config/config";
@@ -13,10 +13,10 @@ import jsonwebtoken from "jsonwebtoken";
 const authRouter = express.Router();
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
-const findUser = async username => {
+const findUserByUsername = async username => {
   const params = {
     TableName: USERS_TABLE,
-    IndexName: INDEX_NAME,
+    IndexName: USERS_INDEX_NAME,
     KeyConditionExpression: "username = :username",
     ExpressionAttributeValues: {
       ":username": username
@@ -26,7 +26,7 @@ const findUser = async username => {
 };
 
 function generateAccessToken(user) {
-  return jsonwebtoken.sign(user, ACCESS_TOKEN_SECRET, { expiresIn: "60m" });
+  return jsonwebtoken.sign(user, ACCESS_TOKEN_SECRET, { expiresIn: "1m" });
 }
 
 function generateRefreshToken(user) {
@@ -38,11 +38,15 @@ authRouter.post("/login", async (req, res, next) => {
   let result;
 
   try {
-    result = await findUser(username);
+    result = await findUserByUsername(username);
     if (result && result.Items && result.Items[0]) {
       const item = result.Items[0];
       if (await bcrypt.compare(password, item.password)) {
-        const user = { username: item.username, roles: item.roles };
+        const user = {
+          username: item.username,
+          roles: item.roles,
+          id: item.id
+        };
         const accessToken = generateAccessToken(user);
         const refreshToken = generateRefreshToken(user);
         return res
@@ -66,7 +70,7 @@ authRouter.post("/register", async (req, res, next) => {
   // check if user name already exists
   // if exists, return 409
   try {
-    let result = await findUser(username);
+    let result = await findUserByUsername(username);
     if (result && result.Items && result.Items[0]) {
       // const {password} = result.Item;
       const item = result.Items[0];
@@ -96,6 +100,16 @@ authRouter.post("/register", async (req, res, next) => {
   } catch (e) {
     return next(e);
   }
+});
+
+authRouter.post("/verify", (req, res, next) => {
+  const token = req.body.token;
+
+  if (token === null) return res.sendStatus(401);
+  jsonwebtoken.verify(token, ACCESS_TOKEN_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403);
+    res.sendStatus(200);
+  });
 });
 
 export default authRouter;

@@ -40,8 +40,8 @@ provider:
               ],
           }
   environment:
-    USERS_TABLE: ${self:custom.tableName}
-    INDEX_NAME: ${self:custom.indexName}
+    USERS_TABLE: ${self:custom.usersTableName}
+    USERS_INDEX_NAME: ${self:custom.usersIndexName}
     NODE_ENV: ${self:provider.stage}
     ACCESS_TOKEN_SECRET: ${env:ACCESS_TOKEN_SECRET}
     REFRESH_TOKEN_SECRET: ${env:REFRESH_TOKEN_SECRET}
@@ -56,13 +56,16 @@ functions:
       - http:
           path: /register
           method: post
+      - http:
+          path: /verify
+          method: post
 
 resources:
   Resources:
     UsersDynamoDBTable:
       Type: "AWS::DynamoDB::Table"
       Properties:
-        TableName: ${self:custom.tableName}
+        TableName: ${self:custom.usersTableName}
         AttributeDefinitions:
           - AttributeName: id
             AttributeType: S
@@ -75,7 +78,7 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         GlobalSecondaryIndexes:
-          - IndexName: ${self:custom.indexName}
+          - IndexName: ${self:custom.usersIndexName}
             KeySchema:
               - AttributeName: username
                 KeyType: HASH
@@ -86,8 +89,8 @@ resources:
               WriteCapacityUnits: 1
 
 custom:
-  tableName: "users-table-${self:provider.stage}"
-  indexName: "UserDetail"
+  usersTableName: "users-table-${self:provider.stage}"
+  usersIndexName: "UserDetail"
   customDomain:
     domainName: api.saipathuri.me
     basePath: auth
