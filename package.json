@@ -19,7 +19,7 @@
     "serverless-offline": "^5.12.1"
   },
   "scripts": {
-    "deploy": "sls deploy",
+    "deploy": "sls deploy --stage dev",
     "start": "sls offline start",
     "create_domain": "sls create_domain",
     "remove_domain": "sls remove_domain"
