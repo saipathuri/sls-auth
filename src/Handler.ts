@@ -1,5 +1,5 @@
 import serverless from "serverless-http";
-import app from "./app.js";
+import app from "./App.js";
 const handler = serverless(app);
 
 const _server = async (event, context) => {

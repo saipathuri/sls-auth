@@ -1,5 +1,6 @@
 {
   "license": "MIT",
+  "main": "src/Handler.ts",
   "dependencies": {
     "aws-sdk": "^2.610.0",
     "bcryptjs": "^2.4.3",
@@ -7,16 +8,22 @@
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "node-uuid": "^1.4.8",
-    "serverless-bundle": "^1.2.5",
     "serverless-dotenv-plugin": "^2.1.1",
     "serverless-http": "^2.3.1"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
+    "@types/cors": "^2.8.6",
+    "@types/jsonwebtoken": "^8.5.0",
+    "@types/morgan": "^1.9.1",
+    "@types/node-uuid": "^0.0.28",
     "morgan": "^1.9.1",
     "serverless": "^1.62.0",
     "serverless-aws-documentation": "^1.1.0",
     "serverless-domain-manager": "^3.3.1",
-    "serverless-offline": "^5.12.1"
+    "serverless-offline": "^5.12.1",
+    "serverless-plugin-typescript": "^1.1.9",
+    "typescript": "^3.9.6"
   },
   "scripts": {
     "deploy": "sls deploy --stage dev",

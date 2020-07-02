@@ -1,11 +1,11 @@
 service: serverless-auth
 
 plugins:
-  - serverless-bundle
-  - serverless-offline
   - serverless-dotenv-plugin
   - serverless-aws-documentation
   - serverless-domain-manager
+  - serverless-plugin-typescript
+  - serverless-offline
 
 provider:
   name: aws
@@ -47,7 +47,7 @@ provider:
 
 functions:
   auth:
-    handler: handler.server
+    handler: src/Handler.ts
     events:
       - http:
           path: /login

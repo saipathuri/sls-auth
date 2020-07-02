@@ -1,8 +1,8 @@
-import authRouter from "./routes/auth";
+import authRouter from "./routes/Auth";
 import cors from "cors";
 import express, { json } from "express";
 import morgan from "morgan";
-import { isDevEnvironment } from "./config/config";
+import { isDevEnvironment } from "./config/Config";
 
 const app = express();
 
