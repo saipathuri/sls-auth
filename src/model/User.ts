@@ -1,10 +1,3 @@
-export default interface User {
-  id: string;
-  username: string;
-  password: string;
-  roles: string[];
-}
-
 import {
   USERS_TABLE,
   USERS_INDEX_NAME
@@ -15,7 +8,14 @@ import uuid from "uuid";
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
-export const findByUsername = async (username: string): Promise<User | null> => {
+export default interface User {
+  id: string;
+  username: string;
+  password: string;
+  roles: string[];
+}
+
+export const findUserByUsername = async (username: string): Promise<User | null> => {
   const params = {
     TableName: USERS_TABLE as string,
     IndexName: USERS_INDEX_NAME as string,
@@ -39,7 +39,7 @@ export const findByUsername = async (username: string): Promise<User | null> => 
   return null;
 };
 
-export const create = async (username: string, password: string) => {
+export const createUser = async (username: string, password: string) => {
   const params = {
     TableName: USERS_TABLE as string,
     Item: {
@@ -49,7 +49,6 @@ export const create = async (username: string, password: string) => {
       roles: [] as string[]
     }
   };
-
 
   return await dynamoDb.put(params).promise();
 }

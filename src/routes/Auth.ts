@@ -6,14 +6,14 @@ import express from "express";
 import jsonwebtoken from "jsonwebtoken";
 
 import { generateAccessToken, generateRefreshToken } from '../utils/JWT';
-import User, { findByUsername, create } from "../model/User";
+import { findUserByUsername, createUser } from "../model/User";
 
 const authRouter = express.Router();
 
 authRouter.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
-  const user = await findByUsername(username);
+  const user = await findUserByUsername(username);
   if (user && await bcrypt.compare(password, user.password)) {
     const accessToken = generateAccessToken(user);
     const refreshToken = generateRefreshToken(user);
@@ -33,20 +33,17 @@ authRouter.post("/register", async (req, res, next) => {
 
   // check if user name already exists
   // if exists, return 409
-  if (await findByUsername(username)) {
+  if (await findUserByUsername(username)) {
     return res.sendStatus(409);
   }
 
   // create user
-  const hashedPassword = await bcrypt.hash(req.body.password, 10);
   try {
-    await create(req.body.username, hashedPassword)
+    await createUser(req.body.username, await bcrypt.hash(req.body.password, 10))
     return res.status(201).json("User successfully created.");
   } catch (e) {
     next(e);
   }
-
-
 });
 
 authRouter.post("/verify", (req, res) => {
