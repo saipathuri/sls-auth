@@ -9,6 +9,7 @@ import {
   USERS_TABLE,
   USERS_INDEX_NAME
 } from "../config/Config";
+
 import AWS from "aws-sdk";
 import uuid from "node-uuid";
 
@@ -16,8 +17,8 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 export const findByUsername = async (username: string): Promise<User | null> => {
   const params = {
-    TableName: <string>USERS_TABLE,
-    IndexName: <string>USERS_INDEX_NAME,
+    TableName: USERS_TABLE as string,
+    IndexName: USERS_INDEX_NAME as string,
     KeyConditionExpression: "username = :username",
     ExpressionAttributeValues: {
       ":username": username
@@ -40,15 +41,15 @@ export const findByUsername = async (username: string): Promise<User | null> => 
 
 export const create = async (username: string, password: string) => {
   const params = {
-    TableName: <string>USERS_TABLE,
+    TableName: USERS_TABLE as string,
     Item: {
       id: uuid.v4(),
-      username: username,
-      password: password,
-      roles: []
+      username,
+      password,
+      roles: [] as string[]
     }
   };
 
-  
+
   return await dynamoDb.put(params).promise();
 }

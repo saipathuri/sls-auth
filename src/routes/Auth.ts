@@ -1,4 +1,3 @@
-import AWS from "aws-sdk";
 import bcrypt from "bcryptjs";
 import {
   ACCESS_TOKEN_SECRET
@@ -20,7 +19,7 @@ authRouter.post("/login", async (req, res) => {
     const refreshToken = generateRefreshToken(user);
     return res
       .status(200)
-      .json({ accessToken: accessToken, refreshToken: refreshToken });
+      .json({ accessToken, refreshToken });
   }
   return res.sendStatus(401);
 });
@@ -38,23 +37,23 @@ authRouter.post("/register", async (req, res, next) => {
     return res.sendStatus(409);
   }
 
-  //create user
+  // create user
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
   try {
-    create(req.body.username, hashedPassword)
+    await create(req.body.username, hashedPassword)
     return res.status(201).json("User successfully created.");
   } catch (e) {
     next(e);
   }
 
- 
+
 });
 
 authRouter.post("/verify", (req, res) => {
   const token = req.body.token;
 
   if (token === null) return res.sendStatus(401);
-  jsonwebtoken.verify(token, <string>ACCESS_TOKEN_SECRET, (err: any) => {
+  jsonwebtoken.verify(token, ACCESS_TOKEN_SECRET as string, (err: any) => {
     if (err) return res.sendStatus(403);
     res.sendStatus(200);
   });

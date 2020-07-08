@@ -8,9 +8,9 @@ import User from "../model/User"
 import jsonwebtoken from "jsonwebtoken";
 
 export function generateAccessToken(user: User) {
-    return jsonwebtoken.sign(user, <string> ACCESS_TOKEN_SECRET, { expiresIn: "60m" });
+    return jsonwebtoken.sign(user, ACCESS_TOKEN_SECRET as string, { expiresIn: "60m" });
 }
-  
+
 export function generateRefreshToken(user: User) {
-    return jsonwebtoken.sign(user, <string> REFRESH_TOKEN_SECRET);
+    return jsonwebtoken.sign(user, REFRESH_TOKEN_SECRET as string);
 }
