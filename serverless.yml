@@ -1,12 +1,26 @@
 service: serverless-auth
 
 plugins:
+  - serverless-webpack
   - serverless-dotenv-plugin
   - serverless-aws-documentation
   - serverless-domain-manager
-  - serverless-plugin-typescript
   - serverless-offline
 
+functions:
+  auth:
+    handler: src/Handler.server
+    events:
+      - http:
+          path: /login
+          method: post
+      - http:
+          path: /register
+          method: post
+      - http:
+          path: /verify
+          method: post
+          
 provider:
   name: aws
   region: us-east-2
@@ -44,20 +58,6 @@ provider:
     NODE_ENV: ${self:provider.stage}
     ACCESS_TOKEN_SECRET: ${env:ACCESS_TOKEN_SECRET}
     REFRESH_TOKEN_SECRET: ${env:REFRESH_TOKEN_SECRET}
-
-functions:
-  auth:
-    handler: src/Handler.ts
-    events:
-      - http:
-          path: /login
-          method: post
-      - http:
-          path: /register
-          method: post
-      - http:
-          path: /verify
-          method: post
 
 resources:
   Resources:
@@ -99,3 +99,6 @@ custom:
     securityPolicy: tls_1_2
   documentation:
     api: ${file(docs/swagger.yml)}
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true

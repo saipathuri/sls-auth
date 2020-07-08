@@ -1,13 +1,22 @@
 {
     "compilerOptions": {
-      "preserveConstEnums": true,
-      "strictNullChecks": true,
-      "sourceMap": true,
-      "allowJs": false,
-      "target": "ES2020",
-      "outDir": ".build",
+      "lib": ["es2017"],
+      "removeComments": true,
       "moduleResolution": "node",
-      "rootDir": "./",
+      "noUnusedLocals": true,
+      "noUnusedParameters": true,
+      "sourceMap": true,
+      "target": "es2017",
+      "outDir": "lib",
       "allowSyntheticDefaultImports": true
-    }
+    },
+    "include": ["./**/*.ts"],
+    "exclude": [
+      "node_modules/**/*",
+      ".serverless/**/*",
+      ".webpack/**/*",
+      "_warmup/**/*",
+      ".vscode/**/*"
+    ]
   }
+  
