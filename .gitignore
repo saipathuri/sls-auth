@@ -16,3 +16,6 @@ jspm_packages
 
 # Typescript output
 .build
+
+# yarn
+yarn-error.log
