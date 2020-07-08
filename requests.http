@@ -6,3 +6,22 @@ content-type: application/json
     "password": "test",
     "passwordRepeat": "test"
 }
+
+###
+
+POST http://localhost:3000/dev/login
+content-type: application/json
+
+{
+    "username": "saipathuri",
+    "password": ""
+}
+
+###
+
+POST http://localhost:3000/dev/verify
+Content-Type: application/json
+
+{
+    "token": """
+}

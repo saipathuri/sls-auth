@@ -4,7 +4,7 @@ import {
 } from "../config/Config";
 
 import AWS from "aws-sdk";
-import uuid from "uuid";
+import { v4 as uuidv4 } from 'uuid';
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
@@ -43,7 +43,7 @@ export const createUser = async (username: string, password: string) => {
   const params = {
     TableName: USERS_TABLE as string,
     Item: {
-      id: uuid.v4(),
+      id: uuidv4(),
       username,
       password,
       roles: [] as string[]
