@@ -91,9 +91,9 @@ custom:
   usersTableName: "users-table-${self:provider.stage}"
   usersIndexName: "UserDetail"
   customDomain:
-    domainName: api.saipathuri.me
+    domainName: api.pathuri.net
     basePath: auth
-    certificateName: "api.saipathuri.me"
+    certificateName: "www.api.pathuri.net"
     createRoute53Record: true
     endpointType: "regional"
     securityPolicy: tls_1_2
