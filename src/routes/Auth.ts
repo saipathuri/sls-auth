@@ -17,6 +17,7 @@ authRouter.post("/login", async (req, res) => {
   if (user && await bcrypt.compare(password, user.password)) {
     const accessToken = generateAccessToken(user);
     const refreshToken = generateRefreshToken(user);
+    res.cookie('token', accessToken, { secure: true, httpOnly: false, maxAge: 60 * 60 * 1000 });
     return res
       .status(200)
       .json({ accessToken, refreshToken });
